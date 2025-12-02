@@ -1,0 +1,7 @@
+# Big datasets
+data/raw/
+data/processed/
+
+# Optionally ignore model checkpoints too
+models/
+!models_exported/
