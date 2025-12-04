@@ -3,5 +3,5 @@ data/raw/
 data/processed/
 
 # Optionally ignore model checkpoints too
-models/
+# models/
 !models_exported/
