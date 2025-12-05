@@ -1,7 +1,21 @@
 # plant-disease-project
 Plant disease classification project
 
-## Dataset Setup
+## Quick Start
+
+### 1. Install Dependencies
+
+**For GPU (CUDA 12.1) - Recommended:**
+```bash
+pip install -r requirements-gpu.txt
+```
+
+**For CPU only:**
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Dataset Setup
 
 1. Download the PlantVillage dataset from Kaggle:
    - https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset
