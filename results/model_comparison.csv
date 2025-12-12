@@ -1,0 +1,7 @@
+Metric,EfficientNet-B0,Custom CNN
+Test Accuracy,0.9971,0.9560
+F1 Score (Macro),0.9957,0.9377
+F1 Score (Weighted),0.9971,0.9576
+Parameters,"48,678","4,857,286"
+Model Size (MB),15.63,18.54
+Inference Speed (samples/sec),1132.7,935.0

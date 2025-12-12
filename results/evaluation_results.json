@@ -1,0 +1,18 @@
+{
+  "efficientnet": {
+    "accuracy": 0.9970690602674482,
+    "f1_macro": 0.9957036981555255,
+    "f1_weighted": 0.9970830079549692,
+    "parameters": 48678,
+    "model_size_mb": 15.633926391601562,
+    "samples_per_second": 1132.6840126152654
+  },
+  "custom_cnn": {
+    "accuracy": 0.9560359040117238,
+    "f1_macro": 0.937744950114976,
+    "f1_weighted": 0.9576190265693911,
+    "parameters": 4857286,
+    "model_size_mb": 18.544288635253906,
+    "samples_per_second": 934.9632756059485
+  }
+}
