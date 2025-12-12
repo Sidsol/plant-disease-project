@@ -66,6 +66,20 @@ class EfficientNetB0(nn.Module):
         for param in self.backbone.features.parameters():
             param.requires_grad = True
         print("Entire backbone unfrozen.")
+    
+    def get_num_params(self, trainable_only: bool = True) -> int:
+        """
+        Get the number of parameters in the model.
+        
+        Args:
+            trainable_only: If True, count only trainable parameters
+            
+        Returns:
+            Number of parameters
+        """
+        if trainable_only:
+            return sum(p.numel() for p in self.parameters() if p.requires_grad)
+        return sum(p.numel() for p in self.parameters())
         
     def unfreeze_last_n_blocks(self, n: int = 3):
         """
