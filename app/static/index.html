@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plant Disease Classifier</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo">&#127793;</div>
+      <h1>Plant Disease Classifier</h1>
+      <p class="subtitle">Upload a photo of a plant leaf and our AI will identify the disease</p>
+    </header>
+
+    <!-- Model Selector -->
+    <div class="model-selector">
+      <label for="model-select">Model:</label>
+      <select id="model-select">
+        <option value="efficientnet" selected>EfficientNet-B0 (99.7% acc)</option>
+        <option value="custom_cnn">Custom CNN (95.6% acc)</option>
+      </select>
+    </div>
+
+    <!-- Upload Area -->
+    <div class="upload-area" id="upload-area">
+      <div class="upload-content" id="upload-content">
+        <div class="upload-icon">&#128247;</div>
+        <p class="upload-text">Drag &amp; drop a leaf image here</p>
+        <p class="upload-hint">or click to browse &mdash; JPEG, PNG, WebP</p>
+      </div>
+      <img id="preview" class="preview hidden" alt="Preview" />
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden />
+    </div>
+
+    <!-- Action buttons -->
+    <div class="actions">
+      <button id="classify-btn" class="btn btn-primary" disabled>Classify</button>
+      <button id="clear-btn" class="btn btn-secondary hidden">Clear</button>
+    </div>
+
+    <!-- Loading spinner -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Analyzing image&hellip;</p>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results hidden">
+      <div class="result-card" id="top-result"></div>
+      <h3>Top 5 Predictions</h3>
+      <div class="bar-chart" id="bar-chart"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Powered by PyTorch &middot; Trained on PlantVillage Dataset &middot; 38 Classes</p>
+    </footer>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
