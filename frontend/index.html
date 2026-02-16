@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Disease Detector</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>🌿 Plant Disease Detector</h1>
+        <p>
+          Basic frontend for uploading a leaf image and reviewing model prediction results.
+          Connect this UI to a backend endpoint like <code>POST /predict</code>.
+        </p>
+      </header>
+
+      <section class="card controls">
+        <label for="modelSelect">Model</label>
+        <select id="modelSelect">
+          <option value="efficientnet">EfficientNet-B0</option>
+          <option value="custom_cnn">Custom CNN</option>
+        </select>
+
+        <label for="imageInput">Leaf image</label>
+        <input id="imageInput" type="file" accept="image/*" />
+
+        <button id="predictButton" disabled>Run prediction</button>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Preview</h2>
+          <img id="previewImage" alt="Uploaded leaf preview" hidden />
+          <p id="emptyPreview">Upload an image to begin.</p>
+        </article>
+
+        <article class="card">
+          <h2>Top predictions</h2>
+          <ol id="predictionList"></ol>
+          <p id="emptyPrediction">Prediction results will appear here.</p>
+        </article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #f4f8f4;
+  color: #123;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+h1 {
+  margin-bottom: 0.4rem;
+}
+
+p {
+  line-height: 1.45;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 1rem;
+  border: 1px solid #d9e5d9;
+  box-shadow: 0 2px 14px rgba(6, 56, 16, 0.06);
+}
+
+.controls {
+  margin: 1.2rem 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+select,
+input,
+button {
+  font-size: 1rem;
+  padding: 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #c8d7c8;
+}
+
+button {
+  background: #1f7a37;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+#previewImage {
+  max-width: 100%;
+  border-radius: 10px;
+  border: 1px solid #d8e2d8;
+}
+
+#predictionList {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+#predictionList li {
+  margin: 0.5rem 0;
+}
