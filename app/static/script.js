@@ -1,18 +1,23 @@
 // ============================================================
-// Plant Disease Classifier – Front-end Logic
+// Plant Disease Classifier – Front-end Logic (v2)
 // ============================================================
 
-const uploadArea    = document.getElementById("upload-area");
-const uploadContent = document.getElementById("upload-content");
-const preview       = document.getElementById("preview");
-const fileInput     = document.getElementById("file-input");
-const classifyBtn   = document.getElementById("classify-btn");
-const clearBtn      = document.getElementById("clear-btn");
-const loading       = document.getElementById("loading");
-const resultsDiv    = document.getElementById("results");
-const topResult     = document.getElementById("top-result");
-const barChart      = document.getElementById("bar-chart");
-const modelSelect   = document.getElementById("model-select");
+const uploadArea      = document.getElementById("upload-area");
+const uploadContent   = document.getElementById("upload-content");
+const preview         = document.getElementById("preview");
+const fileInput       = document.getElementById("file-input");
+const classifyBtn     = document.getElementById("classify-btn");
+const clearBtn        = document.getElementById("clear-btn");
+const loading         = document.getElementById("loading");
+const resultsDiv      = document.getElementById("results");
+const topResult       = document.getElementById("top-result");
+const barChart        = document.getElementById("bar-chart");
+const modelSelect     = document.getElementById("model-select");
+const confidenceValue = document.getElementById("confidence-value");
+const confidenceFill  = document.getElementById("confidence-fill");
+const modelMetadata   = document.getElementById("model-metadata");
+const treatmentCard   = document.getElementById("treatment-card");
+const treatmentList   = document.getElementById("treatment-list");
 
 let selectedFile = null;
 
@@ -69,6 +74,7 @@ function resetUI() {
   clearBtn.classList.add("hidden");
   resultsDiv.classList.add("hidden");
   loading.classList.add("hidden");
+  treatmentCard.classList.add("hidden");
 }
 
 // ---- Classification ----
@@ -81,6 +87,7 @@ async function classify() {
   classifyBtn.disabled = true;
   loading.classList.remove("hidden");
   resultsDiv.classList.add("hidden");
+  treatmentCard.classList.add("hidden");
 
   const formData = new FormData();
   formData.append("file", selectedFile);
@@ -104,6 +111,9 @@ async function classify() {
     }
     const data = await res.json();
     showResults(data);
+
+    // Fetch treatment tips for the diagnosed class
+    fetchTreatment(data.class_name);
   } catch (err) {
     alert("Error: " + err.message);
   } finally {
@@ -112,12 +122,36 @@ async function classify() {
   }
 }
 
+// ---- Fetch treatment tips ----
+
+async function fetchTreatment(className) {
+  try {
+    const res = await fetch(`/api/treatment/${encodeURIComponent(className)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    showTreatment(data);
+  } catch {
+    // Silently ignore – treatment tips are supplementary
+  }
+}
+
+function showTreatment(data) {
+  treatmentList.innerHTML = "";
+  data.tips.forEach((t) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="tip-badge ${t.category}">${t.category}</span> ${t.tip}`;
+    treatmentList.appendChild(li);
+  });
+  treatmentCard.classList.remove("hidden");
+}
+
 // ---- Display results ----
 
 function showResults(data) {
   const top = data.prediction;
-  const pct = (top.confidence * 100).toFixed(1);
+  const pct = top.confidence_percentage.toFixed(2);
 
+  // Badge
   const badge = top.healthy
     ? '<span class="condition healthy">&#10004; Healthy</span>'
     : `<span class="condition disease">&#9888; ${top.condition}</span>`;
@@ -125,17 +159,38 @@ function showResults(data) {
   topResult.innerHTML = `
     <div class="plant-name">${top.plant}</div>
     ${badge}
-    <div class="confidence">${pct}% confidence &middot; ${data.model}</div>
   `;
 
-  // Bar chart
+  // Confidence progress bar
+  confidenceValue.textContent = `${pct}%`;
+  confidenceFill.style.width = `${pct}%`;
+
+  // Color the bar based on confidence
+  if (top.confidence_percentage >= 80) {
+    confidenceFill.className = "confidence-fill high";
+  } else if (top.confidence_percentage >= 50) {
+    confidenceFill.className = "confidence-fill medium";
+  } else {
+    confidenceFill.className = "confidence-fill low";
+  }
+
+  // Model metadata
+  const meta = data.model_metadata;
+  modelMetadata.innerHTML = `
+    <div class="meta-row"><span class="meta-label">Model</span><span>${meta.architecture}</span></div>
+    <div class="meta-row"><span class="meta-label">Version</span><span>v${meta.model_version}</span></div>
+    <div class="meta-row"><span class="meta-label">Device</span><span>${meta.device}</span></div>
+    <div class="meta-row"><span class="meta-label">Classes</span><span>${meta.num_classes}</span></div>
+  `;
+
+  // Bar chart – top 5
   barChart.innerHTML = "";
-  const maxConf = data.top5[0].confidence;
+  const maxConf = data.top5[0].confidence_percentage;
 
   data.top5.forEach((p, i) => {
     const label = `${p.plant} – ${p.condition}`;
-    const pctVal = (p.confidence * 100).toFixed(1);
-    const widthPct = (p.confidence / maxConf) * 100;
+    const pctVal = p.confidence_percentage.toFixed(2);
+    const widthPct = (p.confidence_percentage / maxConf) * 100;
 
     const row = document.createElement("div");
     row.className = "bar-row";

@@ -49,7 +49,30 @@
 
     <!-- Results -->
     <div id="results" class="results hidden">
+      <!-- Diagnosis Card -->
       <div class="result-card" id="top-result"></div>
+
+      <!-- Confidence Progress Bar -->
+      <div class="confidence-bar-wrapper" id="confidence-wrapper">
+        <div class="confidence-label">
+          <span>Confidence</span>
+          <span id="confidence-value">0%</span>
+        </div>
+        <div class="confidence-track">
+          <div class="confidence-fill" id="confidence-fill"></div>
+        </div>
+      </div>
+
+      <!-- Model Metadata -->
+      <div class="metadata-card" id="model-metadata"></div>
+
+      <!-- Treatment Tips -->
+      <div class="treatment-card hidden" id="treatment-card">
+        <h3>&#128138; Treatment Tips</h3>
+        <ul id="treatment-list"></ul>
+      </div>
+
+      <!-- Top 5 -->
       <h3>Top 5 Predictions</h3>
       <div class="bar-chart" id="bar-chart"></div>
     </div>
