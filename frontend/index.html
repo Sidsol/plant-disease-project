@@ -3,62 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plant Disease Detector</title>
+    <title>Plant Disease Detector (React + XAI)</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="container">
-      <header>
-        <h1>🌿 Plant Disease Detector</h1>
-        <p>Upload a leaf image, get diagnosis confidence, and fetch treatment tips from the API.</p>
-      </header>
+    <div id="root"></div>
 
-      <section class="card controls">
-        <label for="modelSelect">Model</label>
-        <select id="modelSelect">
-          <option value="efficientnet">EfficientNet-B0</option>
-          <option value="custom_cnn">Custom CNN</option>
-        </select>
-
-        <label for="imageInput">Leaf image</label>
-        <input id="imageInput" type="file" accept="image/*" />
-
-        <button id="predictButton" disabled>Run diagnosis</button>
-      </section>
-
-      <section class="grid">
-        <article class="card">
-          <h2>Preview</h2>
-          <img id="previewImage" alt="Uploaded leaf preview" hidden />
-          <p id="emptyPreview">Upload an image to begin.</p>
-        </article>
-
-        <article class="card">
-          <h2>Diagnosis</h2>
-          <p id="diagnosisText">Diagnosis will appear here.</p>
-          <div class="progress-wrap" hidden id="confidenceWrap">
-            <div class="progress-label">
-              <span>Confidence</span>
-              <strong id="confidenceValue">0.00%</strong>
-            </div>
-            <div class="progress-track">
-              <div id="confidenceBar" class="progress-bar"></div>
-            </div>
-          </div>
-          <small id="metadataText"></small>
-
-          <h3>Top predictions</h3>
-          <ol id="predictionList"></ol>
-        </article>
-
-        <article class="card">
-          <h2>Treatment Tips</h2>
-          <ul id="tipsList"></ul>
-          <p id="emptyTips">Treatment guidance will appear after diagnosis.</p>
-        </article>
-      </section>
-    </main>
-
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
