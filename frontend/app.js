@@ -1,24 +1,18 @@
-const CLASS_NAMES = [
-  "Apple → Apple scab",
-  "Apple → Black rot",
-  "Cherry (including sour) → Powdery mildew",
-  "Corn (maize) → Common rust",
-  "Grape → Black rot",
-  "Potato → Early blight",
-  "Potato → Late blight",
-  "Tomato → Bacterial spot",
-  "Tomato → Early blight",
-  "Tomato → Late blight",
-  "Tomato → healthy",
-];
+const API_BASE = window.location.origin;
 
 const imageInput = document.querySelector("#imageInput");
 const modelSelect = document.querySelector("#modelSelect");
 const predictButton = document.querySelector("#predictButton");
 const previewImage = document.querySelector("#previewImage");
 const emptyPreview = document.querySelector("#emptyPreview");
+const diagnosisText = document.querySelector("#diagnosisText");
+const confidenceWrap = document.querySelector("#confidenceWrap");
+const confidenceBar = document.querySelector("#confidenceBar");
+const confidenceValue = document.querySelector("#confidenceValue");
+const metadataText = document.querySelector("#metadataText");
 const predictionList = document.querySelector("#predictionList");
-const emptyPrediction = document.querySelector("#emptyPrediction");
+const tipsList = document.querySelector("#tipsList");
+const emptyTips = document.querySelector("#emptyTips");
 
 let selectedFile = null;
 
@@ -32,8 +26,7 @@ imageInput.addEventListener("change", () => {
     return;
   }
 
-  const previewUrl = URL.createObjectURL(selectedFile);
-  previewImage.src = previewUrl;
+  previewImage.src = URL.createObjectURL(selectedFile);
   previewImage.hidden = false;
   emptyPreview.hidden = true;
 });
@@ -41,56 +34,74 @@ imageInput.addEventListener("change", () => {
 predictButton.addEventListener("click", async () => {
   if (!selectedFile) return;
 
-  predictButton.disabled = true;
-  predictButton.textContent = "Predicting...";
+  try {
+    predictButton.disabled = true;
+    predictButton.textContent = "Diagnosing...";
 
-  const predictions = await runPrediction(selectedFile, modelSelect.value);
-  renderPredictions(predictions);
+    const diagnosis = await fetchDiagnosis(selectedFile, modelSelect.value);
+    renderDiagnosis(diagnosis);
 
-  predictButton.disabled = false;
-  predictButton.textContent = "Run prediction";
+    const tipsPayload = await fetchTreatmentTips(diagnosis.class_name);
+    renderTips(tipsPayload.treatment_tips);
+  } catch (error) {
+    diagnosisText.textContent = `Error: ${error.message}`;
+  } finally {
+    predictButton.disabled = false;
+    predictButton.textContent = "Run diagnosis";
+  }
 });
 
-async function runPrediction(file, model) {
-  // If a backend exists, use it. Otherwise, use fallback mock predictions.
-  try {
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("model", model);
+async function fetchDiagnosis(file, model) {
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("model", model);
 
-    const response = await fetch("/predict", {
-      method: "POST",
-      body: formData,
-    });
+  const response = await fetch(`${API_BASE}/predict`, {
+    method: "POST",
+    body: formData,
+  });
 
-    if (response.ok) {
-      const json = await response.json();
-      if (Array.isArray(json.predictions)) return json.predictions;
-    }
-  } catch (_error) {
-    // Fallback below.
+  if (!response.ok) {
+    throw new Error("Diagnosis request failed.");
   }
 
-  return buildMockPredictions();
+  return response.json();
 }
 
-function buildMockPredictions() {
-  const shuffled = [...CLASS_NAMES].sort(() => Math.random() - 0.5).slice(0, 3);
-  const raw = [0.64, 0.23, 0.13];
-  return shuffled.map((label, idx) => ({
-    label,
-    confidence: raw[idx],
-  }));
+async function fetchTreatmentTips(diagnosisName) {
+  const response = await fetch(
+    `${API_BASE}/treatment-tips?diagnosis=${encodeURIComponent(diagnosisName)}`,
+  );
+  if (!response.ok) {
+    throw new Error("Treatment tips request failed.");
+  }
+  return response.json();
 }
 
-function renderPredictions(predictions) {
+function renderDiagnosis(payload) {
+  diagnosisText.textContent = payload.class_name;
+  confidenceWrap.hidden = false;
+  confidenceBar.style.width = `${payload.confidence_percentage}%`;
+  confidenceValue.textContent = `${payload.confidence_percentage.toFixed(2)}%`;
+
+  const modelData = payload.model_metadata;
+  metadataText.textContent = `${modelData.model_name} • ${modelData.checkpoint} • ${modelData.classes_supported} classes`;
+
   predictionList.innerHTML = "";
-  emptyPrediction.hidden = true;
-
-  predictions.forEach((item) => {
+  payload.top_predictions.forEach((item) => {
     const li = document.createElement("li");
-    const confidencePct = (Number(item.confidence) * 100).toFixed(1);
-    li.textContent = `${item.label} (${confidencePct}%)`;
+    li.textContent = `${item.class_name} (${item.confidence_percentage.toFixed(2)}%)`;
     predictionList.appendChild(li);
+  });
+}
+
+function renderTips(tips) {
+  tipsList.innerHTML = "";
+  emptyTips.hidden = tips.length > 0;
+
+  tips.forEach((tip) => {
+    const li = document.createElement("li");
+    li.textContent = tip;
+    tipsList.appendChild(li);
   });
 }

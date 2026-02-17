@@ -10,21 +10,13 @@ body {
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 2rem 1rem 3rem;
 }
 
-h1 {
-  margin-bottom: 0.4rem;
-}
-
-p {
-  line-height: 1.45;
-}
-
 .card {
-  background: white;
+  background: #fff;
   border-radius: 14px;
   padding: 1rem;
   border: 1px solid #d9e5d9;
@@ -48,7 +40,7 @@ button {
 
 button {
   background: #1f7a37;
-  color: white;
+  color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
@@ -70,11 +62,32 @@ button:disabled {
   border: 1px solid #d8e2d8;
 }
 
-#predictionList {
-  margin: 0;
-  padding-left: 1.2rem;
+.progress-wrap {
+  margin: 0.8rem 0;
 }
 
-#predictionList li {
-  margin: 0.5rem 0;
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.progress-track {
+  width: 100%;
+  background: #e5ece6;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 12px;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #49a64f, #1f7a37);
+}
+
+#predictionList,
+#tipsList {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
 }

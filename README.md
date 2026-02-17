@@ -35,19 +35,23 @@ pip install -r requirements.txt
        --train_ratio 0.8 --val_ratio 0.1 --test_ratio 0.1
    ```
 
-## Frontend (basic)
+## API + Frontend
 
-A basic frontend UI is included in `frontend/`.
+This repo now includes a backend API (`api/main.py`) connected to the frontend (`frontend/`).
 
 ### Run locally
 
 ```bash
-python -m http.server 8000
+uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
-Then open: `http://localhost:8000/frontend/`
+Then open: `http://localhost:8000/`
 
-Notes:
-- The UI is intentionally lightweight and focuses on image upload + prediction display.
-- It will call `POST /predict` if a backend is available.
-- If no backend exists yet, it falls back to mock predictions so the UI can still be tested.
+### API endpoints
+
+- `POST /predict`
+  - Input: `multipart/form-data` with `image` and `model` (`efficientnet` or `custom_cnn`)
+  - Output: `DiagnosisResponse` with `class_name`, `confidence_percentage`, `model_metadata`, and `top_predictions`
+
+- `GET /treatment-tips?diagnosis=<class_name>`
+  - Output: treatment guidance list for the diagnosis

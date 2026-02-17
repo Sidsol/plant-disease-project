@@ -10,10 +10,7 @@
     <main class="container">
       <header>
         <h1>🌿 Plant Disease Detector</h1>
-        <p>
-          Basic frontend for uploading a leaf image and reviewing model prediction results.
-          Connect this UI to a backend endpoint like <code>POST /predict</code>.
-        </p>
+        <p>Upload a leaf image, get diagnosis confidence, and fetch treatment tips from the API.</p>
       </header>
 
       <section class="card controls">
@@ -26,7 +23,7 @@
         <label for="imageInput">Leaf image</label>
         <input id="imageInput" type="file" accept="image/*" />
 
-        <button id="predictButton" disabled>Run prediction</button>
+        <button id="predictButton" disabled>Run diagnosis</button>
       </section>
 
       <section class="grid">
@@ -37,9 +34,27 @@
         </article>
 
         <article class="card">
-          <h2>Top predictions</h2>
+          <h2>Diagnosis</h2>
+          <p id="diagnosisText">Diagnosis will appear here.</p>
+          <div class="progress-wrap" hidden id="confidenceWrap">
+            <div class="progress-label">
+              <span>Confidence</span>
+              <strong id="confidenceValue">0.00%</strong>
+            </div>
+            <div class="progress-track">
+              <div id="confidenceBar" class="progress-bar"></div>
+            </div>
+          </div>
+          <small id="metadataText"></small>
+
+          <h3>Top predictions</h3>
           <ol id="predictionList"></ol>
-          <p id="emptyPrediction">Prediction results will appear here.</p>
+        </article>
+
+        <article class="card">
+          <h2>Treatment Tips</h2>
+          <ul id="tipsList"></ul>
+          <p id="emptyTips">Treatment guidance will appear after diagnosis.</p>
         </article>
       </section>
     </main>
