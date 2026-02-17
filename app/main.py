@@ -4,12 +4,15 @@ Plant Disease Classification API.
 FastAPI backend that serves predictions from trained models.
 """
 
+import base64
 import sys
 from pathlib import Path
 from typing import List, Optional
 
 import torch
+import numpy as np
 from fastapi import FastAPI, File, UploadFile, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
@@ -26,7 +29,19 @@ from ml.src.data.dataset import IMAGENET_MEAN, IMAGENET_STD
 
 from torchvision import transforms
 
-app = FastAPI(title="Plant Disease Classifier", version="2.0.0")
+from app.gradcam import generate_gradcam, heatmap_to_base64
+from app.database import init_db, save_scan, get_history, get_scan_by_id, save_report, get_flagged
+
+app = FastAPI(title="Plant Disease Classifier", version="3.0.0")
+
+# CORS — allow the Vite dev server during development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ---------------------------------------------------------------------------
@@ -62,6 +77,7 @@ class DiagnosisResponse(BaseModel):
       - raw 0.873421  -> 87.34
       - raw 0.001499  ->  0.15
     """
+    scan_id: str = Field(..., description="Unique scan ID for history / report")
     class_name: str = Field(..., description="Raw PlantVillage class label")
     confidence_percentage: float = Field(
         ..., description="Top-1 confidence as a percentage (0-100), rounded to 2 dp"
@@ -69,6 +85,10 @@ class DiagnosisResponse(BaseModel):
     model_metadata: ModelMetadata
     prediction: PredictionItem
     top5: List[PredictionItem]
+    attention_map: Optional[str] = Field(
+        None,
+        description="Base64-encoded JPEG of the Grad-CAM heatmap overlay (XAI)",
+    )
 
 
 class TreatmentTip(BaseModel):
@@ -82,6 +102,38 @@ class TreatmentResponse(BaseModel):
     condition: str
     healthy: bool
     tips: List[TreatmentTip]
+
+
+class HistoryItem(BaseModel):
+    id: str
+    timestamp: str
+    model_name: str
+    class_name: str
+    plant: str
+    condition: str
+    healthy: bool
+    confidence: float
+    thumbnail: Optional[str] = None
+    attention_map: Optional[str] = None
+
+
+class HistoryResponse(BaseModel):
+    items: List[HistoryItem]
+    total: int
+    page: int
+    limit: int
+    pages: int
+
+
+class ReportRequest(BaseModel):
+    scan_id: str
+    reason: Optional[str] = None
+    user_correction: Optional[str] = None
+
+
+class ReportResponse(BaseModel):
+    report_id: str
+    message: str
 
 # ---------------------------------------------------------------------------
 # Class names (38 PlantVillage classes, alphabetically sorted as ImageFolder)
@@ -297,6 +349,21 @@ GENERIC_DISEASE_TIPS: list[dict] = [
     {"tip": "Consult your local agricultural extension office for region-specific guidance.", "category": "cultural"},
 ]
 
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+def image_to_base64_thumbnail(image: Image.Image, max_size: int = 256) -> str:
+    """Resize and encode an image as base64 JPEG thumbnail."""
+    w, h = image.size
+    if max(w, h) > max_size:
+        scale = max_size / max(w, h)
+        image = image.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
+    buf = io.BytesIO()
+    image.save(buf, format="JPEG", quality=75)
+    return base64.b64encode(buf.getvalue()).decode("ascii")
+
+
 # ---------------------------------------------------------------------------
 # Image preprocessing (must match training pipeline)
 # ---------------------------------------------------------------------------
@@ -346,9 +413,10 @@ def load_model(model_name: str):
     return model
 
 
-# Pre-load the best model at startup
+# Pre-load models and init DB at startup
 @app.on_event("startup")
 async def startup():
+    init_db()
     try:
         load_model("efficientnet")
     except Exception as e:
@@ -394,7 +462,7 @@ async def list_classes():
     }
 
 
-@app.post("/api/predict")
+@app.post("/api/predict", response_model=DiagnosisResponse)
 async def predict(
     file: UploadFile = File(...),
     model_name: str = "efficientnet",
@@ -402,7 +470,8 @@ async def predict(
     """
     Classify an uploaded plant leaf image.
 
-    Returns top-5 predictions with confidence scores.
+    Returns top-5 predictions with confidence scores and a Grad-CAM
+    attention heatmap for Explainable AI (XAI).
     """
     # Validate file type
     if file.content_type not in ("image/jpeg", "image/png", "image/webp"):
@@ -423,9 +492,18 @@ async def predict(
     except (ValueError, FileNotFoundError) as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    with torch.no_grad():
-        logits = model(tensor)
+    # ---- Grad-CAM + prediction in one forward+backward pass ----
+    attention_map_b64: Optional[str] = None
+    try:
+        cam, logits = generate_gradcam(model, model_name, tensor)
         probs = torch.nn.functional.softmax(logits, dim=1)[0]
+        attention_map_b64 = heatmap_to_base64(image, cam)
+    except Exception as e:
+        # Fallback: run without Grad-CAM
+        print(f"Grad-CAM failed ({e}), falling back to no-grad inference")
+        with torch.no_grad():
+            logits = model(tensor)
+            probs = torch.nn.functional.softmax(logits, dim=1)[0]
 
     # Top-5 results  —  confidence as percentage rounded to 2 dp
     # Few-shot rounding examples:
@@ -458,12 +536,31 @@ async def predict(
         device=str(DEVICE),
     )
 
+    # Generate a thumbnail for history storage
+    thumbnail_b64 = image_to_base64_thumbnail(image)
+
+    # Persist to scan history
+    scan_id = save_scan(
+        model_name=model_name,
+        class_name=top.class_name,
+        plant=top.plant,
+        condition=top.condition,
+        healthy=top.healthy,
+        confidence=top.confidence_percentage,
+        top5=[p.model_dump() for p in predictions],
+        metadata=metadata.model_dump(),
+        thumbnail=thumbnail_b64,
+        attention_map=attention_map_b64,
+    )
+
     return DiagnosisResponse(
+        scan_id=scan_id,
         class_name=top.class_name,
         confidence_percentage=top.confidence_percentage,
         model_metadata=metadata,
         prediction=top,
         top5=predictions,
+        attention_map=attention_map_b64,
     )
 
 
@@ -499,7 +596,57 @@ async def get_treatment(class_name: str):
 
 
 # ---------------------------------------------------------------------------
-# Serve static frontend
+# History endpoint (paginated)
 # ---------------------------------------------------------------------------
-STATIC_DIR = Path(__file__).parent / "static"
-app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
+@app.get("/api/history", response_model=HistoryResponse)
+async def history(
+    page: int = Query(1, ge=1, description="Page number"),
+    limit: int = Query(10, ge=1, le=50, description="Items per page"),
+):
+    """Return paginated scan history, newest first."""
+    data = get_history(page=page, limit=limit)
+    # Convert healthy from int to bool for each item
+    for item in data["items"]:
+        item["healthy"] = bool(item["healthy"])
+    return data
+
+
+# ---------------------------------------------------------------------------
+# Human-in-the-Loop: Report incorrect prediction
+# ---------------------------------------------------------------------------
+@app.post("/api/report", response_model=ReportResponse)
+async def report_incorrect(req: ReportRequest):
+    """
+    Flag a prediction as incorrect.
+
+    The image and AI prediction are saved to the flagged_data table
+    so a human reviewer can inspect and queue for retraining.
+    """
+    scan = get_scan_by_id(req.scan_id)
+    if not scan:
+        raise HTTPException(status_code=404, detail="Scan not found.")
+
+    report_id = save_report(
+        scan_id=req.scan_id,
+        reason=req.reason,
+        user_correction=req.user_correction,
+        image_base64=scan.get("thumbnail"),
+        ai_prediction=scan.get("class_name"),
+    )
+
+    return ReportResponse(
+        report_id=report_id,
+        message="Thank you! Your feedback has been recorded and will help improve the model.",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Serve React build (production) or legacy static files
+# ---------------------------------------------------------------------------
+REACT_BUILD_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+LEGACY_STATIC_DIR = Path(__file__).parent / "static"
+
+if REACT_BUILD_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(REACT_BUILD_DIR), html=True), name="frontend")
+else:
+    app.mount("/", StaticFiles(directory=str(LEGACY_STATIC_DIR), html=True), name="static")
