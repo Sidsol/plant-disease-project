@@ -33,3 +33,32 @@ pip install -r requirements.txt
        --source ../data/raw/plantvillage/color \
        --dest   ../data/processed/plantvillage_color_80_10_10 \
        --train_ratio 0.8 --val_ratio 0.1 --test_ratio 0.1
+   ```
+
+## API + React Frontend (HCAI + XAI)
+
+Run the integrated API and UI:
+
+```bash
+uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+
+Then open: `http://localhost:8000/`
+
+> The frontend is implemented with ReactJS (loaded from CDN in `frontend/index.html`).
+
+### API Endpoints
+
+- `POST /predict`
+  - Input: `multipart/form-data` with `image` and `model` (`efficientnet` or `custom_cnn`)
+  - Output: structured `DiagnosisResponse` with diagnosis, confidence, metadata, and `attention_map_data_url`
+
+- `GET /treatment-tips?diagnosis=<class_name>`
+  - Output: treatment guidance list for the diagnosis
+
+- `GET /history?page=1&page_size=10`
+  - Output: paginated scan history for past diagnoses
+
+- `POST /report-incorrect`
+  - Input: image + predicted metadata
+  - Output: acknowledgment that sample was flagged for human review/retraining
