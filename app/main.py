@@ -5,7 +5,9 @@ FastAPI backend that serves predictions from trained models.
 """
 
 import base64
+import json
 import sys
+import uuid
 from pathlib import Path
 from typing import List, Optional
 
@@ -14,7 +16,7 @@ import numpy as np
 from fastapi import FastAPI, File, UploadFile, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from PIL import Image
 import io
@@ -30,7 +32,11 @@ from ml.src.data.dataset import IMAGENET_MEAN, IMAGENET_STD
 from torchvision import transforms
 
 from app.gradcam import generate_gradcam, heatmap_to_base64
-from app.database import init_db, save_scan, get_history, get_scan_by_id, save_report, get_flagged
+from app.database import (
+    init_db, save_scan, get_history, get_scan_by_id, save_report, get_flagged,
+    save_chat_message, get_chat_history,
+)
+from app.chat import generate_response, check_ollama_status, list_models as list_ollama_models
 
 app = FastAPI(title="Plant Disease Classifier", version="3.0.0")
 
@@ -135,6 +141,14 @@ class ReportResponse(BaseModel):
     report_id: str
     message: str
 
+
+class ChatRequest(BaseModel):
+    message: str = Field(..., min_length=1, max_length=2000)
+    scan_id: Optional[str] = None
+    session_id: Optional[str] = None
+    history: Optional[List[dict]] = None
+    model: Optional[str] = None
+
 # ---------------------------------------------------------------------------
 # Class names (38 PlantVillage classes, alphabetically sorted as ImageFolder)
 # ---------------------------------------------------------------------------
@@ -181,7 +195,16 @@ CLASS_NAMES = [
 
 # Friendly display names
 def friendly_name(raw: str) -> dict:
-    """Convert folder name to readable plant + disease."""
+    """Convert a PlantVillage folder name to a human-readable plant + disease dict.
+
+    Args:
+        raw: Class label in ``Plant___Condition`` format
+             (e.g. ``'Tomato___Late_blight'``).
+
+    Returns:
+        Dict with keys ``plant`` (str), ``condition`` (str), and
+        ``healthy`` (bool).
+    """
     parts = raw.split("___")
     plant = parts[0].replace("_", " ")
     condition = parts[1].replace("_", " ") if len(parts) > 1 else ""
@@ -381,7 +404,22 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 models_cache: dict = {}
 
 def load_model(model_name: str):
-    """Load a model from the exported weights."""
+    """Load a classification model from exported weights, with caching.
+
+    Models are cached after the first load so subsequent requests reuse
+    the same in-memory instance.  Supports ``'efficientnet'`` and
+    ``'custom_cnn'``.
+
+    Args:
+        model_name: One of ``'efficientnet'`` or ``'custom_cnn'``.
+
+    Returns:
+        The loaded PyTorch model in eval mode on the configured DEVICE.
+
+    Raises:
+        ValueError: If *model_name* is not recognised.
+        FileNotFoundError: If the ``.pth`` weights file is missing.
+    """
     if model_name in models_cache:
         return models_cache[model_name]
 
@@ -638,6 +676,111 @@ async def report_incorrect(req: ReportRequest):
         report_id=report_id,
         message="Thank you! Your feedback has been recorded and will help improve the model.",
     )
+
+
+# ---------------------------------------------------------------------------
+# Chat endpoints (RAG + Ollama)
+# ---------------------------------------------------------------------------
+@app.post("/api/chat")
+async def chat(req: ChatRequest):
+    """
+    Send a message to the plant care assistant.
+
+    Returns a streaming response (text/event-stream) with tokens from the LLM.
+    If scan_id is provided, the diagnosed disease context is injected.
+    """
+    # Build diagnosis context if scan_id provided
+    diagnosis_context = None
+    if req.scan_id:
+        scan = get_scan_by_id(req.scan_id)
+        if scan:
+            info = friendly_name(scan["class_name"])
+            diagnosis_context = {
+                "plant": info["plant"],
+                "condition": info["condition"],
+                "healthy": info["healthy"],
+                "confidence": scan["confidence"],
+                "class_name": scan["class_name"],
+            }
+
+    # Resolve chat history — prefer stored history for scan, else use request body
+    chat_history = req.history
+    if not chat_history and req.scan_id:
+        chat_history = get_chat_history(scan_id=req.scan_id)
+    elif not chat_history and req.session_id:
+        chat_history = get_chat_history(session_id=req.session_id)
+
+    model = req.model or "llama3.1:8b"
+
+    # Generate a session ID for standalone chats
+    session_id = req.session_id or (None if req.scan_id else str(uuid.uuid4()))
+
+    # Save user message
+    save_chat_message(
+        role="user",
+        content=req.message,
+        scan_id=req.scan_id,
+        session_id=session_id,
+    )
+
+    async def event_stream():
+        full_response = []
+        try:
+            async for token in generate_response(
+                message=req.message,
+                diagnosis_context=diagnosis_context,
+                chat_history=chat_history,
+                model=model,
+            ):
+                full_response.append(token)
+                yield f"data: {json.dumps({'token': token})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
+        # Save assistant response
+        assistant_text = "".join(full_response)
+        if assistant_text:
+            save_chat_message(
+                role="assistant",
+                content=assistant_text,
+                scan_id=req.scan_id,
+                session_id=session_id,
+            )
+        yield f"data: {json.dumps({'done': True, 'session_id': session_id})}\n\n"
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@app.get("/api/chat/status")
+async def chat_status():
+    """Check if Ollama is available and list models."""
+    return await check_ollama_status()
+
+
+@app.get("/api/chat/models")
+async def chat_models():
+    """List available Ollama models."""
+    models = await list_ollama_models()
+    return {"models": models}
+
+
+@app.get("/api/chat/history")
+async def chat_history_endpoint(
+    scan_id: Optional[str] = None,
+    session_id: Optional[str] = None,
+):
+    """Retrieve chat history for a scan or session."""
+    if not scan_id and not session_id:
+        raise HTTPException(status_code=400, detail="Provide scan_id or session_id.")
+    history = get_chat_history(scan_id=scan_id, session_id=session_id)
+    return {"messages": history}
 
 
 # ---------------------------------------------------------------------------

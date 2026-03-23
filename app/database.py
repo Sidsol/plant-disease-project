@@ -18,6 +18,12 @@ DB_PATH = Path(__file__).resolve().parent.parent / "plant_disease.db"
 
 
 def _get_conn() -> sqlite3.Connection:
+    """Open a new SQLite connection with WAL mode and foreign key enforcement.
+
+    WAL (Write-Ahead Logging) allows concurrent readers while a single
+    writer holds the lock, improving performance under the FastAPI
+    async workload where multiple requests may read history simultaneously.
+    """
     conn = sqlite3.connect(str(DB_PATH), timeout=10)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
@@ -27,6 +33,17 @@ def _get_conn() -> sqlite3.Connection:
 
 @contextmanager
 def get_db():
+    """Context manager that provides a database connection with auto-commit.
+
+    Yields:
+        sqlite3.Connection: A connection that commits on clean exit
+        and always closes on scope exit.
+
+    Usage::
+
+        with get_db() as conn:
+            conn.execute("INSERT INTO ...")
+    """
     conn = _get_conn()
     try:
         yield conn
@@ -71,6 +88,20 @@ def init_db():
                 ON scan_history(timestamp DESC);
             CREATE INDEX IF NOT EXISTS idx_flagged_status
                 ON flagged_data(status);
+
+            CREATE TABLE IF NOT EXISTS chat_history (
+                id          TEXT PRIMARY KEY,
+                scan_id     TEXT,
+                session_id  TEXT,
+                role        TEXT NOT NULL,
+                content     TEXT NOT NULL,
+                timestamp   TEXT NOT NULL
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_scan
+                ON chat_history(scan_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_session
+                ON chat_history(session_id);
             """
         )
 
@@ -192,3 +223,61 @@ def get_flagged(status: str = "pending", page: int = 1, limit: int = 20):
     items = [dict(r) for r in rows]
     pages = max(1, -(-total // limit))
     return {"items": items, "total": total, "page": page, "limit": limit, "pages": pages}
+
+
+# ---------------------------------------------------------------------------
+# Chat history CRUD
+# ---------------------------------------------------------------------------
+
+def save_chat_message(
+    role: str,
+    content: str,
+    scan_id: Optional[str] = None,
+    session_id: Optional[str] = None,
+) -> str:
+    """Save a chat message and return its UUID."""
+    msg_id = str(uuid.uuid4())
+    ts = datetime.now(timezone.utc).isoformat()
+    with get_db() as conn:
+        conn.execute(
+            """
+            INSERT INTO chat_history (id, scan_id, session_id, role, content, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (msg_id, scan_id, session_id, role, content, ts),
+        )
+    return msg_id
+
+
+def get_chat_history(
+    scan_id: Optional[str] = None,
+    session_id: Optional[str] = None,
+    limit: int = 50,
+) -> list[dict]:
+    """Return chat messages for a given scan_id or session_id, oldest first."""
+    with get_db() as conn:
+        if scan_id:
+            rows = conn.execute(
+                """
+                SELECT role, content, timestamp
+                FROM chat_history
+                WHERE scan_id = ?
+                ORDER BY timestamp ASC
+                LIMIT ?
+                """,
+                (scan_id, limit),
+            ).fetchall()
+        elif session_id:
+            rows = conn.execute(
+                """
+                SELECT role, content, timestamp
+                FROM chat_history
+                WHERE session_id = ?
+                ORDER BY timestamp ASC
+                LIMIT ?
+                """,
+                (session_id, limit),
+            ).fetchall()
+        else:
+            return []
+    return [dict(r) for r in rows]

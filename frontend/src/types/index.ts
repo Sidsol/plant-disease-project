@@ -80,3 +80,28 @@ export interface ModelInfo {
   accuracy: number;
   description: string;
 }
+
+// ---------------------------------------------------------------------------
+// Chat types (RAG + Ollama)
+// ---------------------------------------------------------------------------
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  timestamp?: string;
+}
+
+export interface ChatRequest {
+  message: string;
+  scan_id?: string;
+  session_id?: string;
+  history?: ChatMessage[];
+  model?: string;
+}
+
+export interface OllamaStatus {
+  available: boolean;
+  models: string[];
+  default_model: string;
+  error?: string;
+}

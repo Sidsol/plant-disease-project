@@ -34,28 +34,27 @@ export default function ReportButton({ diagnosis, classNames }: Props) {
 
   if (submitted) {
     return (
-      <div className="report-card success">
-        <p>&#10004; Thank you! Your feedback will help improve our model.</p>
+      <div className="report-section success">
+        <p>Thank you! Your feedback will help improve our model.</p>
       </div>
     );
   }
 
   return (
-    <div className="report-card">
+    <div className="report-section">
       {!open ? (
-        <button
-          className="btn btn-report"
-          onClick={() => setOpen(true)}
-          aria-label="Report incorrect prediction"
-        >
-          &#9888; Report Incorrect
-        </button>
+        <div style={{ textAlign: "center" }}>
+          <button className="btn-report" onClick={() => setOpen(true)}>
+            <span className="material-symbols-outlined" style={{ fontSize: "1rem", verticalAlign: "middle", marginRight: "0.35rem" }}>flag</span>
+            Report Incorrect
+          </button>
+        </div>
       ) : (
         <div className="report-form">
           <h4>Report Incorrect Prediction</h4>
           <p className="report-help">
-            Your feedback helps us identify mistakes and improve the model
-            through human-in-the-loop retraining.
+            Your feedback helps us identify mistakes and improve the model through
+            human-in-the-loop retraining.
           </p>
           <label>
             Reason (optional)
@@ -76,26 +75,15 @@ export default function ReportButton({ diagnosis, classNames }: Props) {
               list="class-suggestions"
             />
             <datalist id="class-suggestions">
-              {classNames.map((c) => (
-                <option key={c} value={c} />
-              ))}
+              {classNames.map((c) => <option key={c} value={c} />)}
             </datalist>
           </label>
           {error && <p className="report-error">{error}</p>}
           <div className="report-actions">
-            <button
-              className="btn btn-primary"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
+            <button className="btn-primary" onClick={handleSubmit} disabled={loading}>
               {loading ? "Submitting\u2026" : "Submit Report"}
             </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </button>
+            <button className="btn-secondary" onClick={() => setOpen(false)}>Cancel</button>
           </div>
         </div>
       )}

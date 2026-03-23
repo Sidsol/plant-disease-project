@@ -6,89 +6,123 @@ interface Props {
   refreshTrigger: number;
 }
 
+function confidenceBadgeClass(confidence: number, healthy: boolean): string {
+  if (healthy) return "match-badge healthy";
+  if (confidence >= 90) return "match-badge high";
+  return "match-badge medium";
+}
+
 export default function HistoryPanel({ refreshTrigger }: Props) {
-  const [open, setOpen] = useState(false);
   const [data, setData] = useState<HistoryResponse | null>(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const limit = 6;
 
   useEffect(() => {
-    if (!open) return;
     setLoading(true);
     fetchHistory(page, limit)
       .then(setData)
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [open, page, refreshTrigger]);
+  }, [page, refreshTrigger]);
 
   return (
-    <div className="history-panel">
-      <button
-        className="btn btn-history"
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Toggle scan history"
-      >
-        &#128203; {open ? "Hide History" : "Scan History"}
-      </button>
-
-      {open && (
-        <div className="history-content">
-          {loading && <p className="history-loading">Loading&hellip;</p>}
-          {data && data.items.length === 0 && (
-            <p className="history-empty">No scans yet.</p>
+    <>
+      {/* Editorial Header */}
+      <div className="history-header-section">
+        <div className="history-header-row">
+          <h2 className="history-heading">History</h2>
+          {data && (
+            <span className="history-count">{data.total} Records</span>
           )}
-          {data && data.items.length > 0 && (
-            <>
-              <div className="history-grid">
-                {data.items.map((item: HistoryItem) => (
-                  <div
-                    key={item.id}
-                    className={`history-card ${item.healthy ? "healthy" : "disease"}`}
-                  >
-                    {item.thumbnail && (
+        </div>
+        <div className="history-underline" />
+      </div>
+
+      {/* Content */}
+      {loading && (
+        <div className="loading-state">
+          <div className="spinner" />
+          <p>Loading history&hellip;</p>
+        </div>
+      )}
+
+      {data && data.items.length === 0 && (
+        <div className="chat-welcome">
+          <p className="chat-welcome-title">No scans yet</p>
+          <p className="chat-welcome-sub">
+            Upload and classify a plant leaf image to see your scan history here.
+          </p>
+        </div>
+      )}
+
+      {data && data.items.length > 0 && (
+        <>
+          <div className="history-list">
+            {data.items.map((item: HistoryItem) => (
+              <div key={item.id} className="history-item">
+                <div className="history-item-inner">
+                  {item.thumbnail && (
+                    <div className="history-thumb">
                       <img
                         src={`data:image/jpeg;base64,${item.thumbnail}`}
                         alt={item.class_name}
-                        className="history-thumb"
                       />
-                    )}
-                    <div className="history-info">
-                      <strong>{item.plant}</strong>
-                      <span className={item.healthy ? "badge-healthy" : "badge-disease"}>
-                        {item.condition}
-                      </span>
-                      <span className="history-conf">
-                        {item.confidence.toFixed(2)}%
+                      <div className="history-thumb-overlay" />
+                    </div>
+                  )}
+                  <div className="history-item-info">
+                    <div>
+                      <p className="history-plant">{item.plant}</p>
+                      <h3 className="history-condition">
+                        {item.healthy ? "Healthy Specimen" : item.condition}
+                      </h3>
+                    </div>
+                    <div className="history-meta">
+                      <span className={confidenceBadgeClass(item.confidence, item.healthy)}>
+                        {item.confidence.toFixed(0)}% Match
                       </span>
                       <span className="history-date">
                         {new Date(item.timestamp).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
-              <div className="history-pagination">
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {data.pages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+              >
+                <span className="material-symbols-outlined">chevron_left</span>
+              </button>
+              {Array.from({ length: Math.min(data.pages, 5) }, (_, i) => i + 1).map((p) => (
                 <button
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => p - 1)}
+                  key={p}
+                  className={`page-btn ${p === page ? "active" : ""}`}
+                  onClick={() => setPage(p)}
                 >
-                  &laquo; Prev
+                  {p}
                 </button>
-                <span>
-                  Page {data.page} of {data.pages}
-                </span>
-                <button
-                  disabled={page >= data.pages}
-                  onClick={() => setPage((p) => p + 1)}
-                >
-                  Next &raquo;
-                </button>
-              </div>
-            </>
+              ))}
+              {data.pages > 5 && <span style={{ margin: "0 0.25rem", color: "var(--outline)" }}>&hellip;</span>}
+              <button
+                className="page-btn"
+                disabled={page >= data.pages}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                <span className="material-symbols-outlined">chevron_right</span>
+              </button>
+            </div>
           )}
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

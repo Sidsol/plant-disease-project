@@ -4,6 +4,9 @@ import type {
   HistoryResponse,
   ReportRequest,
   ReportResponse,
+  ChatRequest,
+  ChatMessage,
+  OllamaStatus,
 } from "../types";
 
 const BASE = "";
@@ -57,4 +60,81 @@ export async function reportIncorrect(
     throw new Error(err.detail ?? "Report failed");
   }
   return res.json();
+}
+
+// ---------------------------------------------------------------------------
+// Chat API (RAG + Ollama streaming)
+// ---------------------------------------------------------------------------
+
+export async function sendChatMessage(
+  req: ChatRequest,
+  onToken: (token: string) => void,
+  onDone?: (sessionId?: string) => void,
+  onError?: (error: string) => void
+): Promise<void> {
+  const res = await fetch(`${BASE}/api/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail ?? "Chat request failed");
+  }
+
+  const reader = res.body?.getReader();
+  if (!reader) throw new Error("No response body");
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith("data: ")) continue;
+      const jsonStr = trimmed.slice(6);
+      try {
+        const data = JSON.parse(jsonStr);
+        if (data.token) {
+          onToken(data.token);
+        }
+        if (data.error) {
+          onError?.(data.error);
+        }
+        if (data.done) {
+          onDone?.(data.session_id);
+        }
+      } catch {
+        // skip malformed JSON
+      }
+    }
+  }
+}
+
+export async function fetchChatStatus(): Promise<OllamaStatus> {
+  const res = await fetch(`${BASE}/api/chat/status`);
+  if (!res.ok) {
+    return { available: false, models: [], default_model: "llama3.1:8b" };
+  }
+  return res.json();
+}
+
+export async function fetchChatHistory(
+  scanId?: string,
+  sessionId?: string
+): Promise<ChatMessage[]> {
+  const params = new URLSearchParams();
+  if (scanId) params.set("scan_id", scanId);
+  if (sessionId) params.set("session_id", sessionId);
+  const res = await fetch(`${BASE}/api/chat/history?${params}`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.messages ?? [];
 }

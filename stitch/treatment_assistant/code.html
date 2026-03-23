@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#727973",
+              "inverse-primary": "#accfb8",
+              "surface-tint": "#456552",
+              "secondary-fixed-dim": "#b8cdaa",
+              "primary": "#0c2c1c",
+              "secondary": "#516447",
+              "outline-variant": "#c2c8c1",
+              "on-secondary-fixed-variant": "#3a4c31",
+              "inverse-on-surface": "#f0f1f0",
+              "on-tertiary-fixed": "#2c1600",
+              "surface-bright": "#f8faf9",
+              "secondary-fixed": "#d4e9c4",
+              "on-primary-fixed-variant": "#2e4d3c",
+              "on-surface": "#191c1c",
+              "on-surface-variant": "#424843",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#accfb8",
+              "surface-dim": "#d9dad9",
+              "surface-variant": "#e1e3e2",
+              "primary-fixed": "#c7ebd3",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#101f09",
+              "tertiary-fixed": "#ffdcbd",
+              "primary-container": "#234231",
+              "surface-container-highest": "#e1e3e2",
+              "on-secondary-container": "#576a4c",
+              "surface-container": "#edeeed",
+              "tertiary-fixed-dim": "#f0bd8b",
+              "surface-container-low": "#f3f4f3",
+              "surface": "#f8faf9",
+              "on-tertiary-container": "#cd9d6d",
+              "on-error": "#ffffff",
+              "inverse-surface": "#2e3131",
+              "on-primary": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "on-primary-container": "#8cae98",
+              "surface-container-high": "#e7e8e7",
+              "on-background": "#191c1c",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-primary-fixed": "#012112",
+              "on-tertiary-fixed-variant": "#623f18",
+              "background": "#f8faf9",
+              "secondary-container": "#d4e9c4",
+              "tertiary-container": "#56340e",
+              "tertiary": "#3b1f00"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "1rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+        .font-headline { font-family: 'Epilogue', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-between bg-[#f8faf9] dark:bg-[#191c1c] bg-opacity-90 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#0c2c1c] dark:text-[#f8faf9]" data-icon="eco">eco</span>
+<h1 class="font-['Epilogue'] font-bold text-2xl tracking-tight text-[#0c2c1c] dark:text-[#f8faf9]">Digital Herbarium</h1>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="User profile photo avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTYEnIZPsZ1ubnEty3uQVzF7iVRnBOYMPIQB-lY4q-lwB-1MpJT45iXq01_R4c8n6xzPntXEMpJjeHmavzdOtYMWYXwdlnFyfss9_t-skiDSF9X7wilcEGT19-skxwvklfBaemzTu8sy8ClzhLn6NqXTzGIUE9qYQVo7kPtS-J1N-gWXSe4cH4wP6fOrtoWeNeU8rp7K0p9hdQXnuGZDVaQpnhOh78p6RGi7PPHoCR6L0smoAmEfhnRJPiutCkv2BO6lL9L1G9Lmq5"/>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto space-y-8">
+<!-- Diagnosis Summary -->
+<section class="relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 shadow-sm">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-12 -mt-12"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up of apple leaves with scab disease" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIYdAw-si_w8oXG85TjBhwkt0hGl4GL4-U6x0hI6Hsj8--jczZP1u7nm635Ar6GQr-kbJAZ-1BHWdJj-mawAHT8uYIA7YisPKq5vra1eHTY3XjzRSZen0du-Q69AIgU7l2Nvi6B_gIPpJ6RJV5lGszoWzBfPDQgELZd03G5kSX1mY6WurosA5FOXjpmLxGCDgYmbyyO3Gv3YSoz4mm8Np6waP6t-CDaGEaIdSe4zq870BRqTR4D5jNQrTYPirTm5YdiGK7z8QCYkFk"/>
+</div>
+<div class="space-y-1">
+<span class="text-error font-bold uppercase tracking-widest text-[10px] font-label">Diagnosis Detected</span>
+<h2 class="text-3xl font-headline font-extrabold text-primary">Apple Scab Detected</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed">Fungal infection (Venturia inaequalis) observed on 15% of the leaf surface area.</p>
+</div>
+</div>
+</section>
+<!-- Treatment Tabs / Sections -->
+<section class="space-y-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-headline font-bold text-xl text-primary">Treatment Protocols</h3>
+<span class="text-xs font-semibold text-secondary px-3 py-1 bg-secondary-container rounded-full">Expert Verified</span>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Chemical -->
+<div class="group p-5 bg-surface-container-low rounded-lg transition-all hover:bg-surface-container">
+<div class="flex gap-4">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-on-primary rounded-lg shrink-0">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-primary text-lg">Chemical</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Apply a fungicide containing <span class="font-semibold">Myclobutanil</span> or <span class="font-semibold">Captan</span>. Repeat every 7-10 days during wet periods.</p>
+</div>
+</div>
+</div>
+<!-- Organic -->
+<div class="group p-5 bg-surface-container-low rounded-lg transition-all hover:bg-surface-container border-l-4 border-secondary">
+<div class="flex gap-4">
+<div class="w-12 h-12 flex items-center justify-center bg-secondary text-on-secondary rounded-lg shrink-0">
+<span class="material-symbols-outlined" data-icon="compost">compost</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-secondary text-lg">Organic</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Use <span class="font-semibold">Sulfur</span> or <span class="font-semibold">Neem Oil</span> sprays. Focus on thorough coverage of both upper and lower leaf surfaces.</p>
+</div>
+</div>
+</div>
+<!-- Cultural -->
+<div class="group p-5 bg-tertiary-container/10 rounded-lg transition-all hover:bg-tertiary-container/20">
+<div class="flex gap-4">
+<div class="w-12 h-12 flex items-center justify-center bg-tertiary text-on-tertiary rounded-lg shrink-0">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-tertiary text-lg">Cultural</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Increase air circulation through pruning. Remove and destroy all fallen leaves to prevent spore overwintering.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Plant Care Assistant Section -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-sm space-y-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+</div>
+<h3 class="font-headline font-bold text-xl text-primary">Plant Care Assistant</h3>
+</div>
+<!-- Chat Bubbles -->
+<div class="space-y-4">
+<div class="flex flex-col gap-2 max-w-[85%]">
+<div class="bg-surface-container p-4 rounded-xl rounded-tl-none">
+<p class="text-sm text-on-surface leading-relaxed">Hello! I've analyzed your diagnosis. How can I help you manage this Apple Scab infection today?</p>
+</div>
+<span class="text-[10px] text-outline px-2 uppercase font-bold">Assistant • Now</span>
+</div>
+<!-- Suggested Questions -->
+<div class="flex flex-wrap gap-2 pt-2">
+<button class="px-4 py-2 bg-surface border border-outline-variant text-primary text-xs font-semibold rounded-full hover:bg-surface-container transition-colors">
+                        How do I treat this organically?
+                    </button>
+<button class="px-4 py-2 bg-surface border border-outline-variant text-primary text-xs font-semibold rounded-full hover:bg-surface-container transition-colors">
+                        What causes this condition?
+                    </button>
+<button class="px-4 py-2 bg-surface border border-outline-variant text-primary text-xs font-semibold rounded-full hover:bg-surface-container transition-colors">
+                        Can it spread to other plants?
+                    </button>
+</div>
+</div>
+<!-- Input Area -->
+<div class="relative pt-4">
+<div class="flex items-center gap-2 p-1 bg-surface-container-low rounded-xl">
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-3 px-4 placeholder:text-outline/60" placeholder="Ask your botanical expert..." type="text"/>
+<button class="w-10 h-10 bg-primary text-on-primary rounded-lg flex items-center justify-center hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 backdrop-blur-xl bg-[#f8faf9]/80 dark:bg-[#191c1c]/80 shadow-[0_-12px_32px_rgba(12,44,28,0.08)] rounded-t-[1rem]">
+<a class="flex flex-col items-center justify-center text-[#516447] dark:text-[#bec9b7] px-6 py-2 hover:text-[#0c2c1c] dark:hover:text-[#ffffff] transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home_max">home_max</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#516447] dark:text-[#bec9b7] px-6 py-2 hover:text-[#0c2c1c] dark:hover:text-[#ffffff] transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="potted_plant">potted_plant</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#0c2c1c] dark:text-[#ffffff] bg-[#edeeed] dark:bg-[#2d312f] rounded-xl px-6 py-2 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="forum">forum</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">Assistant</span>
+</a>
+</nav>
+</body></html>

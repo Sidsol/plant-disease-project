@@ -8,7 +8,7 @@ export default function TopPredictions({ top5 }: Props) {
   const maxConf = top5[0]?.confidence_percentage ?? 1;
 
   return (
-    <div className="top-predictions">
+    <div className="top-predictions-section">
       <h3>Top 5 Predictions</h3>
       <div className="bar-chart">
         {top5.map((p, i) => {
@@ -23,9 +23,7 @@ export default function TopPredictions({ top5 }: Props) {
                   style={{ width: `${widthPct}%` }}
                 />
               </div>
-              <div className="bar-value">
-                {p.confidence_percentage.toFixed(2)}%
-              </div>
+              <div className="bar-value">{p.confidence_percentage.toFixed(2)}%</div>
             </div>
           );
         })}

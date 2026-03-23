@@ -1,22 +1,18 @@
 interface Props {
-  value: number; // 0-100
+  value: number;
 }
 
 export default function ConfidenceBar({ value }: Props) {
   const pct = value.toFixed(2);
-  const level = value >= 80 ? "high" : value >= 50 ? "medium" : "low";
 
   return (
-    <div className="confidence-bar-wrapper">
-      <div className="confidence-label">
-        <span>Confidence</span>
-        <span>{pct}%</span>
+    <div className="confidence-card">
+      <div className="confidence-row">
+        <span className="confidence-label">Model Confidence</span>
+        <span className="confidence-value">{pct}%</span>
       </div>
       <div className="confidence-track">
-        <div
-          className={`confidence-fill ${level}`}
-          style={{ width: `${pct}%` }}
-        />
+        <div className="confidence-fill" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

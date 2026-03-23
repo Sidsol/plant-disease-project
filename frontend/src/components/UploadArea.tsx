@@ -6,7 +6,7 @@ interface Props {
   onClear: () => void;
 }
 
-export default function UploadArea({ onFileSelect, preview }: Props) {
+export default function UploadArea({ onFileSelect, preview, onClear }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
@@ -26,21 +26,49 @@ export default function UploadArea({ onFileSelect, preview }: Props) {
 
   return (
     <div
-      className={`upload-area ${dragOver ? "dragover" : ""}`}
-      onClick={() => inputRef.current?.click()}
+      className={`action-card ${preview ? "has-preview" : ""} ${dragOver ? "dragover" : ""}`}
       onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
       onDragLeave={() => setDragOver(false)}
       onDrop={onDrop}
     >
-      {preview ? (
-        <img src={preview} alt="Preview" className="preview" />
-      ) : (
-        <div className="upload-content">
-          <div className="upload-icon">&#128247;</div>
-          <p className="upload-text">Drag &amp; drop a leaf image here</p>
-          <p className="upload-hint">or click to browse &mdash; JPEG, PNG, WebP</p>
+      {/* Decorative background element */}
+      {!preview && (
+        <div className="action-card-decor">
+          <span className="material-symbols-outlined">potted_plant</span>
         </div>
       )}
+
+      {preview ? (
+        <>
+          <img src={preview} alt="Leaf preview" className="preview-image" />
+          <div className="action-buttons">
+            <button className="btn-secondary" onClick={(e) => { e.stopPropagation(); onClear(); }}>
+              <span className="material-symbols-outlined">close</span>
+              Remove Photo
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className="upload-circle"
+            onClick={() => inputRef.current?.click()}
+            style={{ cursor: "pointer" }}
+          >
+            <span className="material-symbols-outlined">photo_camera</span>
+          </div>
+          <div className="action-buttons">
+            <button
+              className="btn-primary"
+              onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
+            >
+              <span className="material-symbols-outlined">upload_file</span>
+              Upload Photo
+            </button>
+          </div>
+        </>
+      )}
+
       <input
         ref={inputRef}
         type="file"
