@@ -1,7 +1,29 @@
-# Big datasets
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Data & vector store
 data/raw/
 data/processed/
+data/chromadb/
 
-# Optionally ignore model checkpoints too
-# models/
+# Model checkpoints (keep exported models)
+runs/
 !models_exported/
+
+# SQLite database (generated at runtime)
+*.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
