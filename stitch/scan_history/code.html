@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Digital Herbarium - Scan History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#727973",
+                        "inverse-primary": "#accfb8",
+                        "surface-tint": "#456552",
+                        "secondary-fixed-dim": "#b8cdaa",
+                        "primary": "#0c2c1c",
+                        "secondary": "#516447",
+                        "outline-variant": "#c2c8c1",
+                        "on-secondary-fixed-variant": "#3a4c31",
+                        "inverse-on-surface": "#f0f1f0",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-bright": "#f8faf9",
+                        "secondary-fixed": "#d4e9c4",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-surface": "#191c1c",
+                        "on-surface-variant": "#424843",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#accfb8",
+                        "surface-dim": "#d9dad9",
+                        "surface-variant": "#e1e3e2",
+                        "primary-fixed": "#c7ebd3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#101f09",
+                        "tertiary-fixed": "#ffdcbd",
+                        "primary-container": "#234231",
+                        "surface-container-highest": "#e1e3e2",
+                        "on-secondary-container": "#576a4c",
+                        "surface-container": "#edeeed",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface-container-low": "#f3f4f3",
+                        "surface": "#f8faf9",
+                        "on-tertiary-container": "#cd9d6d",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2e3131",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#8cae98",
+                        "surface-container-high": "#e7e8e7",
+                        "on-background": "#191c1c",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#012112",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "background": "#f8faf9",
+                        "secondary-container": "#d4e9c4",
+                        "tertiary-container": "#56340e",
+                        "tertiary": "#3b1f00"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "1rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8faf9;
+            color: #191c1c;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full px-6 py-4 flex items-center justify-between bg-surface bg-opacity-90 backdrop-blur-md z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="eco">eco</span>
+<h1 class="font-['Epilogue'] font-bold text-2xl tracking-tight text-primary">Digital Herbarium</h1>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden ring-2 ring-primary-container ring-offset-2">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="User profile avatar photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaKImjk-jnGu870zMxd0x2U7ofwMHpHosW5qmfPQtFouE-63V4SaESxYae8tBYJo303n0OU1A_0eaRY7g5LR55nY1ZAAyriNI2JfsILY8LP5JGzolGhiSBCsesDHwGwQeXsXuHTgInjvfQGJ_UQqKY1wE1AXCoYxE7ybPrnQbYvmmRRLDu3DhOxbRlZxqcSMykDhdOWNq3PNnRKrY1TLCVw3_d5Q7MjmOuYiddeCHhK3_wEk2kjFQla7tCNptdPscP0Jcw9bzjJZel"/>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-4xl mx-auto">
+<!-- Editorial Header -->
+<section class="mb-10">
+<div class="flex items-baseline justify-between gap-4">
+<h2 class="font-headline font-extrabold text-5xl tracking-tighter text-on-surface mb-2">History</h2>
+<span class="font-body text-secondary text-sm font-semibold uppercase tracking-widest">24 Records</span>
+</div>
+<div class="h-1 w-24 bg-primary rounded-full mt-4"></div>
+</section>
+<!-- Search & Filter (Tonal Shift Container) -->
+<div class="bg-surface-container-low rounded-lg p-4 mb-8 flex flex-wrap gap-4 items-center">
+<div class="flex-1 min-w-[200px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary-container text-on-surface placeholder:text-outline-variant" placeholder="Search archive..." type="text"/>
+</div>
+<button class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-lg font-semibold text-sm text-secondary hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                Category
+            </button>
+</div>
+<!-- Scan List (Bento-ish Editorial Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Item 1 -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-1 overflow-hidden hover:scale-[1.01] transition-all duration-300">
+<div class="flex gap-4 p-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img alt="Tomato Leaf" class="w-full h-full object-cover" data-alt="Close up of a tomato leaf with spots" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvgGwHzz1RDdUCsRUyryXnWCmlbHLF-I7f5syGTYqwOzv17fmm_9OxIIdW9UKyRcuw7NZoA2kU7cJQODT2gDOcoTAw4cOXVQJlIKUlf45odY73rzPNyn_CjYYljFjl7m0YnC28TMiExC3uteGypJcC9VgLsA3ORnz9x6ItCQV34lnirliy_DVSM3Xl9aBHXafJWO9aQWr64s5FjATxymZRbxYukz9dQhrn9PQKJ5UnKJbhjCE4BQ4pOoz-V6-cvOC9bzQK7K4ZPsYg"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Tomato Solanum</p>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Early Blight</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full">98% Match</span>
+<span class="text-[11px] text-outline font-medium">Oct 12, 2023</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-1 overflow-hidden hover:scale-[1.01] transition-all duration-300">
+<div class="flex gap-4 p-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img alt="Monstera Leaf" class="w-full h-full object-cover" data-alt="Healthy monstera leaf with holes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvuf4CyU9T1rN4nGgkYnUtMEHdOzLeIedcHrjqGFEfLPxJtwCUP1o22g2tuwrHP5H-OfFeNYDJsOparXBM7vo6dkbkXIjAWIFtTpmaguynS_1mpYJgRdo8kjRyflnGM--g6MZxBVKpfTtaJbA2Ue4TdS9HjFOWqkNkHGQqj65f8IWYmnv6ayrUovdPi7HJgVDlmXAE26vbdcvBVX7CN2xnzVQMPOCE98cZTDaomchlsN5qXLoOk2tPso3BPQd9KWRrOhr-4-YFz73n"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Monstera Deliciosa</p>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Healthy Specimen</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant text-[10px] font-bold rounded-full">100% Match</span>
+<span class="text-[11px] text-outline font-medium">Oct 10, 2023</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-1 overflow-hidden hover:scale-[1.01] transition-all duration-300">
+<div class="flex gap-4 p-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img alt="Rose Leaf" class="w-full h-full object-cover" data-alt="Rose leaf with black spot fungus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZzs5lD211XIiOhOQvHExMo4K1C0QP6yoQ7cnaEH_jKxGXmssv0dzvXHWgl6BjaUag3QYkACpXqTWZZBmmfL3iEyLxlKDd1VsIjkDsKINqtMJ_O4g5pFbXkRVUUv_UET_5o8-lFwL1YQiBsu8Ob26YiqC3K9ngMGp9Ly22COfEksRKzKL8HPwrJQp6FOmYCkgAA4Ux6DcHfT5nRv0We9I2r8gKQz3snGcNAk3rgYAem0QlL1XjwZffeOrrrmesgYwHcMowRa5OlbtF"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Rosa Rubiginosa</p>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Black Spot</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold rounded-full">84% Match</span>
+<span class="text-[11px] text-outline font-medium">Oct 08, 2023</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 4 (Micro-Journal Card variation) -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-1 overflow-hidden hover:scale-[1.01] transition-all duration-300">
+<div class="flex gap-4 p-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img alt="Bell Pepper Leaf" class="w-full h-full object-cover" data-alt="Bell pepper leaf with mosaic virus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQYOcY7hFPXFDBP6WcFBWG6OepCNgZV_C0pJvCbX2bnkbPtZk6YgkMgrkzYPBZ6GScmA65b2sflBYx1U_FlR-1xKqXSNrc4gyCIhCLeHTVpTCn9BPWuBmWf5sFq113VTK_pUQHbKEU7MLCT85brwunCJMfj-Hi1UI3o_Jz9i5lZJbvyNEpl99veoCaXLnXcurvXRb8jN4CrFn4OoAYq5eynLNyxMUf6Xtxrm7-onMGTaYRQCMxmhFQQfX44Ks5HbBVFIbJiik-MNYm"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Capsicum Annuum</p>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Mosaic Virus</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full">91% Match</span>
+<span class="text-[11px] text-outline font-medium">Oct 05, 2023</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-1 overflow-hidden hover:scale-[1.01] transition-all duration-300">
+<div class="flex gap-4 p-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img alt="Fiddle Leaf Fig" class="w-full h-full object-cover" data-alt="Fiddle leaf fig with brown edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDj1OATwuATmzk2K63yG0bRx_lgczlZajHUMjEpWBjLs7gymLXb6K2EplPndqox52_IhX5J5r6HW6IWEoxBRUinNFCg_KmGe7JdjMhN0ckZqBP4ta5fCv4j1W1bcyaiEmbEg9evzhW1zdT9yQAZjWEDsRlJRjhbS3nbkhS9jw2Y2IosN42dbAyv4lgr3nTdI4J_tbVbMsoso-2MjWYv7tgkr4j6yrDBhqtLikP4bIS7BavenfgqppNKo1-rlFO7yhfEjb_RthlRsbmO"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Ficus Lyrata</p>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Root Rot Suspect</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold rounded-full">76% Match</span>
+<span class="text-[11px] text-outline font-medium">Oct 01, 2023</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 6 -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-1 overflow-hidden hover:scale-[1.01] transition-all duration-300">
+<div class="flex gap-4 p-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img alt="Pothos Leaf" class="w-full h-full object-cover" data-alt="Variegated pothos leaf close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXWflvZwgL7yEgi5-BnV8p2HWTuQU8Qkm2R-Toxc4KB-G2YKuyIt_LoMrUePQqQmfm_WlX3jJdJLzgwpmrVSz3Vuw61QoNzg5WpLWA1ORKgZNYdCKKTmcCqRoStd5IDqKtawaDyKFsfB1elkbK1bMxE_m47POpgPV3qcl88dO0hT3Yc82rftt7biCd-GMdg43YcHXckgEYScJaDmQL9DdxeXTZ9g5D4IDyOPWBmvegBEyz7eQuFzw94sDCzN59NSq98t1vq-_wiy8C"/>
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Epipremnum Aureum</p>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Iron Deficiency</h3>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold rounded-full">89% Match</span>
+<span class="text-[11px] text-outline font-medium">Sep 28, 2023</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 mb-8 flex items-center justify-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-primary hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-secondary font-semibold hover:bg-surface-container transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-secondary font-semibold hover:bg-surface-container transition-colors">3</button>
+<span class="mx-1 text-outline">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-primary hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 backdrop-blur-xl bg-[#f8faf9]/80 rounded-t-[1rem] shadow-[0_-12px_32px_rgba(12,44,28,0.08)]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-[#516447] px-6 py-2 hover:text-[#0c2c1c] transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home_max">home_max</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">Home</span>
+</a>
+<!-- History (Active) -->
+<a class="flex flex-col items-center justify-center text-[#0c2c1c] bg-[#edeeed] rounded-xl px-6 py-2" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="potted_plant" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">History</span>
+</a>
+<!-- Assistant -->
+<a class="flex flex-col items-center justify-center text-[#516447] px-6 py-2 hover:text-[#0c2c1c] transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="forum">forum</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">Assistant</span>
+</a>
+</nav>
+</body></html>

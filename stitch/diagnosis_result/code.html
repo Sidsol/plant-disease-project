@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Digital Herbarium - Analysis Result</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#727973",
+                        "inverse-primary": "#accfb8",
+                        "surface-tint": "#456552",
+                        "secondary-fixed-dim": "#b8cdaa",
+                        "primary": "#0c2c1c",
+                        "secondary": "#516447",
+                        "outline-variant": "#c2c8c1",
+                        "on-secondary-fixed-variant": "#3a4c31",
+                        "inverse-on-surface": "#f0f1f0",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-bright": "#f8faf9",
+                        "secondary-fixed": "#d4e9c4",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-surface": "#191c1c",
+                        "on-surface-variant": "#424843",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#accfb8",
+                        "surface-dim": "#d9dad9",
+                        "surface-variant": "#e1e3e2",
+                        "primary-fixed": "#c7ebd3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#101f09",
+                        "tertiary-fixed": "#ffdcbd",
+                        "primary-container": "#234231",
+                        "surface-container-highest": "#e1e3e2",
+                        "on-secondary-container": "#576a4c",
+                        "surface-container": "#edeeed",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface-container-low": "#f3f4f3",
+                        "surface": "#f8faf9",
+                        "on-tertiary-container": "#cd9d6d",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2e3131",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#8cae98",
+                        "surface-container-high": "#e7e8e7",
+                        "on-background": "#191c1c",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#012112",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "background": "#f8faf9",
+                        "secondary-container": "#d4e9c4",
+                        "tertiary-container": "#56340e",
+                        "tertiary": "#3b1f00"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "1rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0 12px 32px rgba(12, 44, 28, 0.08);
+        }
+        .glass-header {
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full px-6 py-4 flex items-center justify-between bg-[#f8faf9]/90 backdrop-blur-md z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0c2c1c]" data-icon="eco">eco</span>
+<h1 class="font-['Epilogue'] font-bold text-2xl tracking-tight text-[#0c2c1c]">Digital Herbarium</h1>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container hover:opacity-80 transition-opacity duration-300 cursor-pointer">
+<img alt="User profile photo" data-alt="Close up professional portrait of a user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC48fBohiWhAs6paawMiNEC67Dh-1yigf_LwtYuPP5Aa7zlJPhd1TZ_8JBvFKfDColkQZeI95liwm5ePoW_baIwZc-MGQxhNn0HyxRJU4Bq2hnlF-GYjzerfcQUqZbKiUHkjAWjKfPxr9nm2-ebqTiI5T6b6yb_-uT_O_0fnJx54SWdAR_-aWvC1IPD7-qKpZ2xYWAiUv_J_PRTDHakxg5Zznrg5POp1tKVGqWjC4qbkypSD0x3T890MLYBbuhmcvJL7F7SgRqLaZbX"/>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto space-y-8">
+<!-- Hero Analysis Image Section -->
+<section class="relative group">
+<div class="aspect-[4/3] rounded-lg overflow-hidden editorial-shadow bg-surface-container-low transition-all duration-500">
+<img alt="Apple leaf analysis" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Infected apple leaf showing brownish spots on green surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSreNdXQJ6aB3vULG_L9rxuAJBlrmIK5unmBIKawj40MHmDEG-DosSipOLqOht6qlzFRoNYFWghgqyYbT2cl-8GS2KBWY7NGV0_qJj4bJNxJTMxP8LKuZGeXsn-lD6crfs3XDWbwSzq6NY4haEilhI5Kl-5W2g3FnhrK1kLdj54CGjDUhVb5YyPvlApDhxSwkg1MFray5MubKxChE3j__8WdtrIJqmH9jAWLH8YjEBqrx7SX_KSxVNEgZ5XdKinyXY7bPGdYLQivt7"/>
+<!-- Grad-CAM Overlay (Simulated) -->
+<div class="absolute inset-0 opacity-0 group-hover:opacity-40 pointer-events-none transition-opacity duration-500 bg-gradient-to-tr from-error via-tertiary to-primary mix-blend-overlay"></div>
+</div>
+<div class="absolute -bottom-4 right-6">
+<button class="bg-surface-container-lowest editorial-shadow px-4 py-3 rounded-lg flex items-center gap-3 hover:scale-95 duration-150 ease-in-out transition-transform">
+<span class="material-symbols-outlined text-secondary" data-icon="visibility">visibility</span>
+<span class="font-label text-sm font-bold uppercase tracking-wider text-on-surface">XAI Attention Map</span>
+</button>
+</div>
+</section>
+<!-- Diagnosis Header -->
+<section class="pt-4 space-y-4">
+<div class="space-y-1">
+<span class="text-secondary font-bold text-sm tracking-widest uppercase">Analysis Result</span>
+<h2 class="font-headline font-extrabold text-4xl text-on-surface tracking-tight">Apple - Apple Scab</h2>
+</div>
+<!-- Confidence Meter -->
+<div class="bg-surface-container-low p-6 rounded-lg space-y-3">
+<div class="flex justify-between items-end">
+<span class="font-label font-bold text-xs uppercase text-on-surface-variant">Model Confidence</span>
+<span class="font-headline font-bold text-2xl text-primary">100%</span>
+</div>
+<div class="h-3 w-full bg-secondary-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full w-full"></div>
+</div>
+</div>
+</section>
+<!-- Insights Bento Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Heatmap Explanation -->
+<div class="bg-surface-container-lowest p-6 rounded-lg editorial-shadow border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="neurology">neurology</span>
+<h3 class="font-headline font-bold text-lg">Visual Evidence</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+                    The attention map highlights the <span class="font-bold text-primary">necrotic lesions</span> and olive-green spots as primary features for the "Apple Scab" diagnosis. These clusters match the fungal pattern of Venturia inaequalis.
+                </p>
+</div>
+<!-- Contextual Insight -->
+<div class="bg-tertiary-container p-6 rounded-lg editorial-shadow">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-tertiary-fixed" data-icon="info">info</span>
+<h3 class="font-headline font-bold text-lg text-tertiary-fixed">Next Priority</h3>
+</div>
+<p class="text-tertiary-fixed-dim leading-relaxed text-sm">
+                    This infection is at its peak. Immediate isolation of the tree is recommended to prevent airborne spore dispersion to surrounding orchard blocks.
+                </p>
+</div>
+</section>
+<!-- Primary CTA -->
+<section class="pt-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 px-8 rounded-lg flex items-center justify-between group hover:opacity-90 transition-all duration-300 active:scale-[0.98]">
+<div class="flex flex-col items-start">
+<span class="font-headline font-bold text-xl">View Treatment &amp; Chat</span>
+<span class="text-xs text-on-primary-container font-medium uppercase tracking-widest">Connect with our Botanical AI</span>
+</div>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 backdrop-blur-xl bg-[#f8faf9]/80 dark:bg-[#191c1c]/80 shadow-[0_-12px_32px_rgba(12,44,28,0.08)] rounded-t-[1rem]">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center text-[#0c2c1c] dark:text-[#ffffff] bg-[#edeeed] dark:bg-[#2d312f] rounded-xl px-6 py-2 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home_max" style="font-variation-settings: 'FILL' 1;">home_max</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">Home</span>
+</a>
+<!-- History -->
+<a class="flex flex-col items-center justify-center text-[#516447] dark:text-[#bec9b7] px-6 py-2 hover:text-[#0c2c1c] dark:hover:text-[#ffffff] transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="potted_plant">potted_plant</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">History</span>
+</a>
+<!-- Assistant -->
+<a class="flex flex-col items-center justify-center text-[#516447] dark:text-[#bec9b7] px-6 py-2 hover:text-[#0c2c1c] dark:hover:text-[#ffffff] transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="forum">forum</span>
+<span class="font-['Manrope'] font-semibold text-[10px] uppercase tracking-tighter">Assistant</span>
+</a>
+</nav>
+</body></html>

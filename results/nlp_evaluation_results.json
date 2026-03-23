@@ -1,0 +1,111 @@
+{
+  "knowledge_base": {
+    "total_documents": 46,
+    "total_chunks": 428,
+    "categories": {
+      "disease": 278,
+      "general_care": 81,
+      "plant": 69
+    },
+    "embedding_dimension": 768,
+    "avg_chunk_size_chars": 335.9
+  },
+  "embedding_quality": {
+    "disease": {
+      "intra_similarity": 0.6796,
+      "inter_similarity": 0.672,
+      "separation_ratio": 1.0114
+    },
+    "general_care": {
+      "intra_similarity": 0.6862,
+      "inter_similarity": 0.6703,
+      "separation_ratio": 1.0236
+    },
+    "plant": {
+      "intra_similarity": 0.7109,
+      "inter_similarity": 0.6819,
+      "separation_ratio": 1.0425
+    }
+  },
+  "retrieval_performance": {
+    "mrr": 0.8278,
+    "precision_at_1": 0.7333,
+    "precision_at_3": 0.3778,
+    "precision_at_5": 0.28,
+    "recall_at_5": 0.8778,
+    "hit_rate_at_5": 1.0,
+    "avg_latency_ms": 127.3
+  },
+  "llm_evaluation": {
+    "model": "llama3.1:8b",
+    "embedding_model": "nomic-embed-text",
+    "with_rag": {
+      "rouge1_f1": 0.3273,
+      "rouge2_f1": 0.1313,
+      "rougeL_f1": 0.2435,
+      "bleu_4": 0.0542,
+      "bertscore_f1": 0.8637,
+      "bertscore_precision": 0.8529,
+      "bertscore_recall": 0.8757,
+      "avg_latency_s": 3.06
+    },
+    "without_rag": {
+      "rouge1_f1": 0.2836,
+      "rouge2_f1": 0.0866,
+      "rougeL_f1": 0.1881,
+      "bleu_4": 0.0257,
+      "bertscore_f1": 0.8661,
+      "avg_latency_s": 5.1
+    }
+  },
+  "multi_model_comparison": {
+    "llama3.1:8b": {
+      "rouge1_f1": 0.3478,
+      "rouge2_f1": 0.1388,
+      "rougeL_f1": 0.2607,
+      "bleu_4": 0.0636,
+      "bertscore_f1": 0.8684,
+      "avg_latency_s": 2.44
+    },
+    "phi3:latest": {
+      "rouge1_f1": 0.3329,
+      "rouge2_f1": 0.1115,
+      "rougeL_f1": 0.2018,
+      "bleu_4": 0.0425,
+      "bertscore_f1": 0.8676,
+      "avg_latency_s": 3.23
+    },
+    "mistral:latest": {
+      "rouge1_f1": 0.2846,
+      "rouge2_f1": 0.1071,
+      "rougeL_f1": 0.1906,
+      "bleu_4": 0.0372,
+      "bertscore_f1": 0.8629,
+      "avg_latency_s": 4.93
+    },
+    "phi4:latest": {
+      "rouge1_f1": 0.2785,
+      "rouge2_f1": 0.1029,
+      "rougeL_f1": 0.2061,
+      "bleu_4": 0.0351,
+      "bertscore_f1": 0.8606,
+      "avg_latency_s": 8.29
+    },
+    "phi4-mini:latest": {
+      "rouge1_f1": 0.2761,
+      "rouge2_f1": 0.076,
+      "rougeL_f1": 0.1656,
+      "bleu_4": 0.0262,
+      "bertscore_f1": 0.855,
+      "avg_latency_s": 3.58
+    },
+    "phi4-mini-reasoning:latest": {
+      "rouge1_f1": 0.0596,
+      "rouge2_f1": 0.0261,
+      "rougeL_f1": 0.0456,
+      "bleu_4": 0.0064,
+      "bertscore_f1": 0.8391,
+      "avg_latency_s": 25.85
+    }
+  }
+}
